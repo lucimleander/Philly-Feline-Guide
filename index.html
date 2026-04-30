@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Philly Feline Guide</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Quicksand', 'sans-serif'],
+            balsamiq: ['Balsamiq Sans', 'cursive'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles -->
+  <style>
+    .fade-in { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#f4f1eb] text-[#1a1a1a] font-sans p-6 flex flex-col items-center">
+  <div class="w-full max-w-md flex flex-col items-center pt-8 pb-12 relative">
+    
+    <!-- Back Button -->
+    <button id="back-btn" onclick="setView('home')" class="hidden absolute top-8 left-0 p-2 text-[#7d7d7d] hover:text-[#5a5a5a] transition-colors gap-1 font-bold">
+      <i data-lucide="arrow-left" class="w-5 h-5"></i> Back
+    </button>
+
+    <!-- Title -->
+    <h1 class="text-[46px] font-balsamiq font-bold text-[#5a5a5a] leading-[1.1] text-center mb-6">
+      Philly Feline<br/>Guide
+    </h1>
+
+    <!-- Custom SVG Skyline with Cat -->
+    <div class="w-full mb-6">
+      <svg viewBox="0 0 500 200" class="w-full h-auto stroke-[#7d7d7d] fill-none opacity-80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 10 180 L 10 130 L 30 110 L 50 130 L 50 180 L 50 140 L 60 140 L 80 70 L 100 140 L 110 140 L 110 180 L 110 150 L 130 150 L 130 100 L 140 100 L 140 60 L 145 40 L 150 60 L 150 100 L 160 100 L 160 150 L 180 150 L 180 180 L 200 180 C 200 160, 205 150, 215 150 L 220 120 L 235 140 C 245 135, 265 135, 275 140 L 290 120 L 295 150 C 305 150, 310 160, 310 180 L 320 180 L 320 140 L 340 120 L 360 140 L 360 180 L 360 130 L 370 130 L 370 60 L 380 60 L 380 40 L 400 40 L 400 60 L 410 60 L 410 130 L 420 130 L 420 180 L 490 180" />
+        <path d="M 65 110 L 80 70 L 95 110 M 70 125 L 80 95 L 90 125" stroke-width="1.5" />
+        <circle cx="145" cy="80" r="6" stroke-width="1.5" />
+        <path d="M 145 76 L 145 80 L 148 80" stroke-width="1.5" />
+        <path d="M 240 155 Q 245 150 250 155 M 260 155 Q 265 150 270 155" stroke-width="2.5" />
+        <path d="M 255 165 L 255 170" stroke-width="2.5" />
+        <path d="M 225 155 L 205 150 M 225 165 L 205 165 M 285 155 L 305 150 M 285 165 L 305 165" stroke-width="1.5" />
+        <path d="M 390 40 L 390 180" stroke-width="1.5" />
+      </svg>
+    </div>
+
+    <!-- Dynamic Content Area -->
+    <div id="content" class="w-full"></div>
+
+    <!-- Cat Face Drawing at the Bottom -->
+    <div class="mt-12 flex flex-col items-center">
+      <svg viewBox="0 0 120 60" class="w-24 h-auto stroke-[#7d7d7d] fill-none opacity-80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 0 60 C 0 40, 5 30, 15 30 L 20 0 L 35 20 C 45 15, 65 15, 75 20 L 90 0 L 95 30 C 105 30, 110 40, 110 60 L 120 60" />
+        <path d="M 40 35 Q 45 30 50 35 M 60 35 Q 65 30 70 35" stroke-width="2.5" />
+        <path d="M 55 45 L 55 50" stroke-width="2.5" />
+        <path d="M 25 35 L 5 30 M 25 45 L 5 45 M 85 35 L 105 30 M 85 45 L 105 45" stroke-width="1.5" />
+      </svg>
+    </div>
+
+  </div>
+
+  <script>
+    // Data containing all locations
+    const data = {
+      cafes: {
+        title: "Best Cat Cafes",
+        items: [
+          {name: "Purr Cat Cafe", desc: "A colorful feline lounge and adoption center on East Passyunk.", url: "https://www.purrphilly.com/purr-cat-cafe", address: "1007 E Passyunk Ave, Philadelphia, PA 19147"},
+          {name: "Kawaii Cat Cafe", desc: "Philly's first cat cafe! A Japanese-inspired feline lounge in Queen Village.", url: "https://www.kawaiicatcafe.com/", address: "750 S 4th St, Philadelphia, PA 19147"},
+          {name: "Le Cat Cafe", desc: "Brewerytown's finest feline lounge. Reservations recommended!", url: "https://lecatcafe.org/", address: "2713 W Girard Ave, Philadelphia, PA 19130"},
+          {name: "Get a Gato", desc: "South Philly's newest cat cafe featuring local pastries and adoptable cats.", url: "https://www.getagato.com/", address: "638 Christian St, Philadelphia, PA 19147"}
+        ]
+      },
+      shelters: {
+        title: "Adoption Shelters",
+        items: [
+          {name: "PAWS (Philly Animal Welfare)", desc: "The city's largest rescue partner and provider of basic vet care.", url: "https://phillypaws.org/", address: "100 N 2nd St, Philadelphia, PA 19106"},
+          {name: "Morris Animal Refuge", desc: "America's first animal shelter, located right in Center City.", url: "https://www.morrisanimalrefuge.org/", address: "1242 Lombard St, Philadelphia, PA 19147"},
+          {name: "ACCT Philly", desc: "The region's largest animal care and control service provider.", url: "https://acctphilly.org/", address: "111 W Hunting Park Ave, Philadelphia, PA 19140"},
+          {name: "Project MEOW", desc: "West Philadelphia's dedicated trap-neuter-return and rescue group.", url: "https://www.projectmeow.org/", address: "West Philadelphia, Philadelphia, PA"},
+          {name: "Green Street Rescue", desc: "Fairmount-based rescue focusing on street cats and fostering.", url: "https://greenstreetrescue.org/", address: "Fairmount, Philadelphia, PA"},
+          {name: "Philly Community Cats Council", desc: "Advocating for the community cats of Philadelphia.", url: "https://www.phillycats.org/", address: "Philadelphia, PA"}
+        ]
+      },
+      vets: {
+        title: "Feline-Friendly Vets",
+        items: [
+          {name: "The Cat Doctor", desc: "A feline-only veterinary hospital located in the Art Museum area.", url: "https://www.thecatdoctor.com/", address: "535 N 22nd St, Philadelphia, PA 19130"},
+          {name: "Center City Veterinary Hospital", desc: "Highly rated full-service vet in Old City.", url: "https://www.centercityvet.com/", address: "37 S 3rd St, Philadelphia, PA 19106"},
+          {name: "VCA Cat Hospital of Philadelphia", desc: "Specialized feline care right in Rittenhouse Square.", url: "https://vcahospitals.com/cat-hospital-of-philadelphia", address: "226 S 20th St, Philadelphia, PA 19103"}
+        ]
+      },
+      resources: {
+        title: "Stray Cat Resources",
+        items: [
+          {name: "ACCT Philly Community Cats", desc: "Resources for Trap-Neuter-Return (TNR) and working cat programs.", url: "https://acctphilly.org/programs/community-cats/", address: "111 W Hunting Park Ave, Philadelphia, PA 19140"},
+          {name: "Stray Cat Relief Fund", desc: "Helping stray and feral cats in the South Philly area.", url: "https://straycatrelieffund.org/", address: "South Philadelphia, Philadelphia, PA"},
+          {name: "Temple Cats", desc: "Caring for the community cats around Temple University's campus.", url: "https://www.templecats.org/", address: "Temple University, Philadelphia, PA"}
+        ]
+      }
+    };
+
+    const homeButtons = [
+      { id: 'cafes', icon: 'coffee', label: 'Best Cat Cafes' },
+      { id: 'shelters', icon: 'heart', label: 'Local Adoption Shelters' },
+      { id: 'vets', icon: 'stethoscope', label: 'Feline-Friendly Vets' },
+      { id: 'resources', icon: 'map-pin', label: 'Stray Cat Resources' }
+    ];
+
+    // Navigation and rendering function
+    function setView(viewId) {
+      const content = document.getElementById('content');
+      const backBtn = document.getElementById('back-btn');
+      
+      // Clear current content
+      content.innerHTML = '';
+      
+      if (viewId === 'home') {
+        // Handle Back button visibility
+        backBtn.classList.add('hidden');
+        backBtn.classList.remove('flex');
+        
+        const container = document.createElement('div');
+        container.className = 'flex flex-col w-full gap-4 fade-in';
+        
+        // Generate main buttons
+        homeButtons.forEach(btn => {
+          const button = document.createElement('button');
+          button.onclick = () => setView(btn.id);
+          button.className = 'bg-[#8ba38b] hover:bg-[#7a927a] text-white px-[25px] py-[18px] rounded-[20px] text-center font-bold text-[1.1rem] shadow-[0_4px_6px_rgba(0,0,0,0.08)] transition-all flex items-center justify-center gap-3 cursor-pointer';
+          button.innerHTML = `<i data-lucide="${btn.icon}" class="w-5 h-5"></i> ${btn.label}`;
+          container.appendChild(button);
+        });
+        content.appendChild(container);
+
+      } else {
+        // Handle Back button visibility
+        backBtn.classList.remove('hidden');
+        backBtn.classList.add('flex');
+        
+        const viewData = data[viewId];
+        const container = document.createElement('div');
+        container.className = 'flex flex-col w-full gap-3 fade-in';
+        
+        // Generate Section Title
+        const title = document.createElement('h2');
+        title.className = 'text-[28px] font-balsamiq font-bold text-[#5a5a5a] text-center mb-4';
+        title.textContent = viewData.title;
+        container.appendChild(title);
+        
+        // Generate Place Cards
+        viewData.items.forEach(item => {
+          const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.address)}`;
+          const card = document.createElement('div');
+          card.className = 'bg-white/60 backdrop-blur-sm border-2 border-[#8ba38b] p-4 rounded-[20px] flex flex-col gap-2 hover:bg-white/80 transition-colors group';
+          
+          card.innerHTML = `
+            <div class="flex justify-between items-start">
+              <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="font-balsamiq font-bold text-[#5a5a5a] text-[18px] hover:text-[#8ba38b] transition-colors flex items-center gap-2" style="text-decoration:none;">
+                ${item.name}
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </div>
+            <p class="text-[#4a4a4a] text-sm font-medium leading-snug">${item.desc}</p>
+            <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="text-[#8ba38b] text-xs font-bold hover:underline flex items-center gap-1 mt-1" style="text-decoration:none;">
+              <i data-lucide="map-pin" class="w-3 h-3"></i> View on Map
+            </a>
+          `;
+          container.appendChild(card);
+        });
+        content.appendChild(container);
+      }
+      // Reinitialize Lucide icons to replace <i> tags with SVGs
+      lucide.createIcons();
+    }
+
+    // Initialize application on load
+    setView('home');
+  </script>
+</body>
+</html>
